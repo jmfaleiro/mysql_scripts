@@ -1,0 +1,4 @@
+GRANT ALL PRIVILEGES ON *.* to 'root'@'%' identified by '' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+
+SET global max_connections=1024;
