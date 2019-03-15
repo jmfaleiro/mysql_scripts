@@ -10,10 +10,6 @@ innodb_log_group_home_dir=data/mysqld.2/myrocks
 port=3307
 socket=mysqld.2.sock
 
-max_binlog_size=1G
-binlog_cache_size=262144
-max_binlog_cache_size=666G
-
 tmpdir=/tmp
 slave_load_tmpdir=/tmp
 
@@ -23,9 +19,18 @@ default-storage-engine=rocksdb
 skip-innodb
 default-tmp-storage-engine=MyISAM
 
-log-bin=binlog 
-sync_binlog=0 
-binlog_format=row
+skip-log-bin
+
+# log-bin=binlog 
+# sync_binlog=0 
+# binlog_format=row
+
+# max_binlog_size=1G
+# binlog_cache_size=262144
+# max_binlog_cache_size=666G
+
+max_relay_log_size=500M
+
 
 rocksdb_max_open_files=-1
 rocksdb_max_background_jobs=8

@@ -6,6 +6,8 @@ import subprocess
 import time
 import argparse
 
+MYSQL_SCRIPTS_DIR = "~/mysql_scripts"
+
 def parse_args():
   top_dir_fmt= "_build-5.6-{0}/"
   master_dir= "data/mysqld.1/"
@@ -161,18 +163,20 @@ def measure(arg_dict):
     time.sleep(1) 
 
 def setup_configs(arg_dict):
-  cp_cmd_fmt= "cp {0} {1}"
-  master_cnf, slave_cnf, setup_slave= "~/configs/master.cnf", "~/configs/slave.cnf", "~/configs/setup_slave"
-  os.system(cp_cmd_fmt.format(master_cnf, arg_dict['top_dir']))
-  os.system(cp_cmd_fmt.format(slave_cnf, arg_dict['top_dir']))
-  os.system(cp_cmd_fmt.format(setup_slave, arg_dict['top_dir']))
+  cur_parent_dir = os.path.dirname(os.getcwd())
+  config_parent_dir = os.path.join(cur_parent_dir, "mysql_scripts", "configs")
+  config_files = os.listdir(config_parent_dir)
+  for f in config_files:
+    os.system("cp " + os.path.join(config_parent_dir, f) + " " + arg_dict['top_dir'])
+  os.system("rm -rf data/*")
 
 def setup_expt(arg_dict):
   kill_mysqld_procs(arg_dict['master_dir'], arg_dict['slave_dir'])
   reset_exp_state()
   setup_configs(arg_dict)
   log_file, log_pos= setup_master(arg_dict)
-  setup_slave(arg_dict, log_file, log_pos)
+
+  # setup_slave(arg_dict, log_file, log_pos)
   set_exp_state(arg_dict)
 
 def setup_master(arg_dict):
@@ -180,7 +184,7 @@ def setup_master(arg_dict):
   os.chdir(arg_dict['top_dir'])
   os.system("scripts/mysql_install_db --defaults-file=master.cnf --force")
 
-  subprocess.Popen(['numactl', '--cpunodebind=0,1,2,3', '--membind=0,1,2,3', 'bin/mysqld', '--defaults-file=master.cnf'], 
+  subprocess.Popen(['bin/mysqld', '--defaults-file=master.cnf'], 
                    cwd= '.',
                    stdout= subprocess.PIPE,
                    stderr= subprocess.STDOUT)
@@ -203,8 +207,9 @@ def setup_slave(arg_dict, log_file, log_pos):
 
   parent_dir= os.getcwd()
   os.chdir(arg_dict['top_dir'])
+  os.system("export LD_LIBRARY_PATH=../cityhash/src/.libs/")
   os.system("scripts/mysql_install_db --defaults-file=slave.cnf --force")
-  subprocess.Popen(['numactl', '--cpunodebind=4,5,6,7', '--membind=4,5,6,7', 'bin/mysqld', '--defaults-file=slave.cnf', '--skip-slave-start'], 
+  subprocess.Popen(['bin/mysqld', '--defaults-file=slave.cnf', '--skip-slave-start'], 
                    cwd= '.',
                    stdout= subprocess.PIPE,
                    stderr= subprocess.STDOUT)
@@ -241,7 +246,9 @@ def setup_mysql():
   reset_exp_state()
 
   os.chdir("_build-5.6-Release")
-  os.system("cp ~/configs/* .")
+  config_files = os.listdir(os.path.join(MYSQL_SCRIPTS_DIR, "configs"))
+  for f in config_files:
+    os.system("cp " + os.path.join(MYSQL_SCRIPTS_DIR, "configs", f))
   os.system("rm -rf data/*")
 
   # Setup the master 
