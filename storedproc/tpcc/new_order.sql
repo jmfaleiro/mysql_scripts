@@ -96,33 +96,33 @@ BEGIN
 
   SELECT w_tax
   INTO out_w_tax
-  FROM warehouse
+  FROM WAREHOUSE
   WHERE w_id = tmp_w_id;
 
   SELECT d_tax, d_next_o_id
   INTO out_d_tax, out_d_next_o_id
-  FROM district   
+  FROM DISTRICT
   WHERE d_w_id = tmp_w_id
     AND d_id = tmp_d_id FOR UPDATE;
 
   SET o_id=out_d_next_o_id;
 
-  UPDATE district
+  UPDATE DISTRICT
   SET d_next_o_id = d_next_o_id + 1
   WHERE d_w_id = tmp_w_id
     AND d_id = tmp_d_id;
 
   SELECT c_discount , c_last, c_credit
   INTO out_c_discount, out_c_last, out_c_credit
-  FROM customer
+  FROM CUSTOMER
   WHERE c_w_id = tmp_w_id
     AND c_d_id = tmp_d_id
     AND c_id = tmp_c_id;
 
-  INSERT INTO new_order (no_o_id, no_d_id, no_w_id)
+  INSERT INTO NEW_ORDER (no_o_id, no_d_id, no_w_id)
   VALUES (out_d_next_o_id, tmp_d_id, tmp_w_id);
 
-  INSERT INTO orders (o_id, o_d_id, o_w_id, o_c_id, o_entry_d,
+  INSERT INTO OORDER (o_id, o_d_id, o_w_id, o_c_id, o_entry_d,
 	                    o_carrier_id, o_ol_cnt, o_all_local)
   VALUES (out_d_next_o_id, tmp_d_id, tmp_w_id, tmp_c_id,
 	        current_timestamp, NULL, tmp_o_ol_cnt, tmp_o_all_local);
@@ -138,7 +138,7 @@ BEGIN
 
       SELECT i_price, i_name, i_data
       INTO tmp_i_price, tmp_i_name, tmp_i_data
-      FROM item
+      FROM ITEM
       WHERE i_id = tmp_i_id;
 
       IF tmp_i_price > 0 
@@ -162,7 +162,7 @@ BEGIN
 
       SELECT i_price, i_name, i_data
       INTO tmp_i_price, tmp_i_name, tmp_i_data
-      FROM item
+      FROM ITEM
       WHERE i_id = tmp_i_id;
 
       IF tmp_i_price > 0 
@@ -186,7 +186,7 @@ BEGIN
 
       SELECT i_price, i_name, i_data
       INTO tmp_i_price, tmp_i_name, tmp_i_data
-      FROM item
+      FROM ITEM
       WHERE i_id = tmp_i_id;
 
       IF tmp_i_price > 0 THEN
@@ -209,7 +209,7 @@ BEGIN
 
       SELECT i_price, i_name, i_data
       INTO tmp_i_price, tmp_i_name, tmp_i_data
-      FROM item
+      FROM ITEM
       WHERE i_id = tmp_i_id;
 
       IF tmp_i_price > 0 THEN
@@ -232,7 +232,7 @@ BEGIN
 
       SELECT i_price, i_name, i_data
       INTO tmp_i_price, tmp_i_name, tmp_i_data
-      FROM item
+      FROM ITEM
       WHERE i_id = tmp_i_id;
 
       IF tmp_i_price > 0 THEN
@@ -254,7 +254,7 @@ BEGIN
 
       SELECT i_price, i_name, i_data
       INTO tmp_i_price, tmp_i_name, tmp_i_data
-      FROM item
+      FROM ITEM
       WHERE i_id = tmp_i_id;
 
       IF tmp_i_price > 0 THEN
@@ -276,7 +276,7 @@ BEGIN
 
       SELECT i_price, i_name, i_data
       INTO tmp_i_price, tmp_i_name, tmp_i_data
-      FROM item
+      FROM ITEM
       WHERE i_id = tmp_i_id;
 
       IF tmp_i_price > 0 THEN
@@ -298,7 +298,7 @@ BEGIN
 
       SELECT i_price, i_name, i_data
       INTO tmp_i_price, tmp_i_name, tmp_i_data
-      FROM item
+      FROM ITEM
       WHERE i_id = tmp_i_id;
 
       IF tmp_i_price > 0 THEN
@@ -319,7 +319,7 @@ BEGIN
 
       SELECT i_price, i_name, i_data
       INTO tmp_i_price, tmp_i_name, tmp_i_data
-      FROM item
+      FROM ITEM
       WHERE i_id = tmp_i_id;
 
       IF tmp_i_price > 0 THEN
@@ -341,7 +341,7 @@ BEGIN
 
       SELECT i_price, i_name, i_data 
       INTO tmp_i_price, tmp_i_name, tmp_i_data
-      FROM item
+      FROM ITEM
       WHERE i_id = tmp_i_id;
 
       IF tmp_i_price > 0 THEN
@@ -363,7 +363,7 @@ BEGIN
 
       SELECT i_price, i_name, i_data
       INTO tmp_i_price, tmp_i_name, tmp_i_data
-      FROM item
+      FROM ITEM
       WHERE i_id = tmp_i_id;
 
       IF tmp_i_price > 0 THEN
@@ -385,7 +385,7 @@ BEGIN
 
       SELECT i_price, i_name, i_data
       INTO tmp_i_price, tmp_i_name, tmp_i_data
-      FROM item
+      FROM ITEM
       WHERE i_id = tmp_i_id;
 
       IF tmp_i_price > 0 THEN
@@ -407,7 +407,7 @@ BEGIN
 
       SELECT i_price, i_name, i_data
       INTO tmp_i_price, tmp_i_name, tmp_i_data
-      FROM item
+      FROM ITEM
       WHERE i_id = tmp_i_id;
 
       IF tmp_i_price > 0 THEN
@@ -429,7 +429,7 @@ BEGIN
 
       SELECT i_price, i_name, i_data
       INTO tmp_i_price, tmp_i_name, tmp_i_data
-      FROM item
+      FROM ITEM
       WHERE i_id = tmp_i_id;
 
       IF tmp_i_price > 0 THEN
@@ -452,7 +452,7 @@ BEGIN
 
       SELECT i_price, i_name, i_data
       INTO tmp_i_price, tmp_i_name, tmp_i_data
-      FROM item
+      FROM ITEM
       WHERE i_id = tmp_i_id;
 
       IF tmp_i_price > 0 THEN

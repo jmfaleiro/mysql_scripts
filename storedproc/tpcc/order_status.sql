@@ -109,7 +109,7 @@ DECLARE out_ol_delivery_d15 VARCHAR(28);
 
         declare c cursor for SELECT ol_i_id, ol_supply_w_id, ol_quantity, 
                                     ol_amount, ol_delivery_d
-                             FROM order_line
+                             FROM ORDER_LINE
                              WHERE ol_w_id = in_c_w_id
                                AND ol_d_id = in_c_d_id
                                AND ol_o_id = out_o_id;
@@ -131,7 +131,7 @@ DECLARE out_ol_delivery_d15 VARCHAR(28);
 	IF in_c_id = 0 THEN
 		SELECT c_id
 		INTO out_c_id 
-		FROM customer
+		FROM CUSTOMER
 		WHERE c_w_id = in_c_w_id
 		  AND c_d_id = in_c_d_id
 		  AND c_last = in_c_last
@@ -142,14 +142,14 @@ DECLARE out_ol_delivery_d15 VARCHAR(28);
 
 	SELECT c_first, c_middle, c_last, c_balance
 	INTO out_c_first, out_c_middle, out_c_last, out_c_balance
-	FROM customer
+	FROM CUSTOMER
 	WHERE c_w_id = in_c_w_id   
 	  AND c_d_id = in_c_d_id
 	  AND c_id = out_c_id;
 
 	SELECT o_id, o_carrier_id, o_entry_d, o_ol_cnt
 	INTO out_o_id, out_o_carrier_id, out_o_entry_d, out_o_ol_cnt
-	FROM orders
+	FROM OORDER
 	WHERE o_w_id = in_c_w_id
   	AND o_d_id = in_c_d_id
   	AND o_c_id = out_c_id

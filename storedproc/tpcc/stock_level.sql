@@ -23,13 +23,13 @@ BEGIN
 
   SELECT d_next_o_id
   INTO tmp_d_next_o_id
-  FROM district
+  FROM DISTRICT
   WHERE d_w_id = in_w_id
     AND d_id = in_d_id;
 
   SELECT count(*)
   INTO low_stock
-  FROM order_line, stock, district
+  FROM ORDER_LINE, STOCK, DISTRICT
   WHERE d_id = in_d_id
         AND d_w_id = in_w_id
         AND d_id = ol_d_id

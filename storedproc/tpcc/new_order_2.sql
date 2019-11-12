@@ -35,78 +35,78 @@ DECLARE	tmp_s_data VARCHAR(255);
 	IF in_d_id = 1 THEN
 		SELECT s_quantity, s_dist_01, s_data
 		INTO out_s_quantity, tmp_s_dist, tmp_s_data
-		FROM stock
+		FROM STOCK
 		WHERE s_i_id = in_ol_i_id
 		  AND s_w_id = in_w_id;
 	ELSEIF in_d_id = 2 THEN
 		SELECT s_quantity, s_dist_02, s_data
 		INTO out_s_quantity, tmp_s_dist, tmp_s_data
-		FROM stock
+		FROM STOCK
 		WHERE s_i_id = in_ol_i_id
 		  AND s_w_id = in_w_id;
 	ELSEIF in_d_id = 3 THEN
 		SELECT s_quantity, s_dist_03, s_data
 		INTO out_s_quantity, tmp_s_dist, tmp_s_data
-		FROM stock
+		FROM STOCK
 		WHERE s_i_id = in_ol_i_id
 		  AND s_w_id = in_w_id;
 	ELSEIF in_d_id = 4 THEN
 		SELECT s_quantity, s_dist_04, s_data
 		INTO out_s_quantity, tmp_s_dist, tmp_s_data
-		FROM stock
+		FROM STOCK
 		WHERE s_i_id = in_ol_i_id
 		  AND s_w_id = in_w_id;
 	ELSEIF in_d_id = 5 THEN
 		SELECT s_quantity, s_dist_05, s_data
 		INTO out_s_quantity, tmp_s_dist, tmp_s_data
-		FROM stock
+		FROM STOCK
 		WHERE s_i_id = in_ol_i_id
 		  AND s_w_id = in_w_id;
 	ELSEIF in_d_id = 6 THEN
 		SELECT s_quantity, s_dist_06, s_data
 		INTO out_s_quantity, tmp_s_dist, tmp_s_data
-		FROM stock
+		FROM STOCK
 		WHERE s_i_id = in_ol_i_id
 		  AND s_w_id = in_w_id;
 	ELSEIF in_d_id = 7 THEN
 		SELECT s_quantity, s_dist_07, s_data
 		INTO out_s_quantity, tmp_s_dist, tmp_s_data
-		FROM stock
+		FROM STOCK
 		WHERE s_i_id = in_ol_i_id
 		  AND s_w_id = in_w_id;
 	ELSEIF in_d_id = 8 THEN
 		SELECT s_quantity, s_dist_08, s_data
 		INTO out_s_quantity, tmp_s_dist, tmp_s_data
-		FROM stock
+		FROM STOCK
 		WHERE s_i_id = in_ol_i_id
 		  AND s_w_id = in_w_id;
 	ELSEIF in_d_id = 9 THEN
 		SELECT s_quantity, s_dist_09, s_data
 		INTO out_s_quantity, tmp_s_dist, tmp_s_data
-		FROM stock
+		FROM STOCK
 		WHERE s_i_id = in_ol_i_id
 		  AND s_w_id = in_w_id;
 	ELSEIF in_d_id = 10 THEN
 		SELECT s_quantity, s_dist_10, s_data
 		INTO out_s_quantity, tmp_s_dist, tmp_s_data
-		FROM stock
+		FROM STOCK
 		WHERE s_i_id = in_ol_i_id
 		  AND s_w_id = in_w_id;
 	END IF;
 
 	IF out_s_quantity > in_ol_quantity + 10 THEN
-		UPDATE stock
+		UPDATE STOCK
 		SET s_quantity = s_quantity - in_ol_quantity
 		WHERE s_i_id = in_ol_i_id
 		  AND s_w_id = in_w_id;
 	ELSE
-		UPDATE stock
+		UPDATE STOCK
 		SET s_quantity = s_quantity - in_ol_quantity + 91
 		WHERE s_i_id = in_ol_i_id
 		  AND s_w_id = in_w_id;
 	END IF;
 
-	INSERT INTO order_line (ol_o_id, ol_d_id, ol_w_id, ol_number, ol_i_id,
+	INSERT INTO ORDER_LINE (ol_o_id, ol_d_id, ol_w_id, ol_number, ol_i_id,
 	                        ol_supply_w_id, ol_delivery_d, ol_quantity,
                                 ol_amount, ol_dist_info)
 	VALUES (in_ol_o_id, in_d_id, in_w_id, in_ol_number, in_ol_i_id,

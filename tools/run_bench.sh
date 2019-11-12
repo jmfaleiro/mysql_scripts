@@ -94,87 +94,87 @@ out=$(ssh $primary "$scriptsdir/tools/read_status.sh $builddir $mastercnf master
 
 logfile=$(echo "$out" | tr "\n" "\t" | cut -f6)
 logpos=$(echo "$out" | tr "\n" "\t" | cut -f7)
-#
-# echo "Reading primary ncommits"
-# mastercommits=$(ssh $primary "$scriptsdir/tools/read_ncommits.sh $builddir $mastercnf")
-#
-# echo "Waiting for binlog transfer"
-# ssh $backup "$scriptsdir/tools/wait_transfer.sh $projectdir $builddir $slavecnf $logfile $logpos"
-#
-# echo "Waiting for replication to finish"
-# ssh $backup "$scriptsdir/tools/wait_replication.sh $projectdir $builddir $slavecnf $mastercommits"
-#
-# if [[ $asyncprocessing == "true" ]]; then
-#     echo "Stopping replication"
-#     ssh $backup "$scriptsdir/tools/stop_replication.sh $projectdir $builddir"
-# fi
-#
-# echo "Starting clients"
-# i=0
-# for c in ${clients[@]}; do
-#     ssh $c "$scriptsdir/tools/start_client.sh $projectdir $outdir $benchmark $i"
-#     let i=$i+1
-# done
-#
-# echo "Starting monitors"
-# pid1=$(ssh $primary "$scriptsdir/tools/start_monitor.sh $projectdir $builddir $outdir $mastercnf primary")
-#
-# if [[ $asyncprocessing != "true" ]]; then
-#     pid2=$(ssh $backup "$scriptsdir/tools/start_monitor.sh $projectdir $builddir $outdir $slavecnf backup")
-# fi
-#
-# echo "Letting clients start up"
-# sleep 2
-#
-# echo "Waiting for clients to finish"
-# for c in ${clients[@]}; do
-#     ssh $c "$scriptsdir/tools/wait_client.sh"
-# done
-#
-# echo "Stopping primary monitor"
-# ssh $primary "$scriptsdir/tools/stop_monitor.sh $pid1"
-#
-# if [[ $asyncprocessing == "true" ]]; then
-#     echo "Reading primary log position"
-#     out=$(ssh $primary "$scriptsdir/tools/read_status.sh $builddir $mastercnf master")
-#
-#     logfile=$(echo "$out" | tr "\n" "\t" | cut -f6)
-#     logpos=$(echo "$out" | tr "\n" "\t" | cut -f7)
-#
-#     echo "Reading primary ncommits"
-#     mastercommits=$(ssh $primary "$scriptsdir/tools/read_ncommits.sh $builddir $mastercnf")
-#
-#     echo "Waiting for binlog transfer"
-#     ssh $backup "$scriptsdir/tools/wait_transfer.sh $projectdir $builddir $slavecnf $logfile $logpos"
-#
-#     echo "Starting backup monitor"
-#     pid2=$(ssh $backup "$scriptsdir/tools/start_monitor.sh $projectdir $builddir $outdir $slavecnf backup")
-#
-#     echo "Starting replication"
-#     ssh $backup "$scriptsdir/tools/start_replication.sh $projectdir $builddir"
-#
-#     echo "Waiting for replication to finish"
-#     ssh $backup "$scriptsdir/tools/wait_replication.sh $projectdir $builddir $slavecnf $mastercommits"
-# fi
-#
-# echo "Stopping backup monitor"
-# ssh $backup "$scriptsdir/tools/stop_monitor.sh $pid2"
-#
-# echo "Gathering outputs"
-# ssh $primary "$scriptsdir/tools/gather_outputs.sh $builddir $outdir"
-# ssh $backup "$scriptsdir/tools/gather_outputs.sh $builddir $outdir"
-#
-# echo "Stopping backup"
-# ssh $backup "$scriptsdir/tools/stop_backup.sh $builddir"
-#
-# echo "Stopping primary"
-# ssh $primary "$scriptsdir/tools/stop_primary.sh $builddir"
-#
-# echo "Processing monitor logs"
-# configsdir="$scriptsdir/tools"
-# bench_config="$configsdir/$benchmark.xml"
-# duration=$(sed -n "s!\s*<time>\([0-9]\+\)</time>\s*!\1!p" $bench_config)
-#
-# $scriptsdir/tools/process_monitor_log.py -s primary -d $duration -i $outdir/monitor.primary.csv -o $outdir
-#
-# $scriptsdir/tools/process_monitor_log.py -s backup -d $duration -i $outdir/monitor.backup.csv -o $outdir
+
+echo "Reading primary ncommits"
+mastercommits=$(ssh $primary "$scriptsdir/tools/read_ncommits.sh $builddir $mastercnf")
+
+echo "Waiting for binlog transfer"
+ssh $backup "$scriptsdir/tools/wait_transfer.sh $projectdir $builddir $slavecnf $logfile $logpos"
+
+echo "Waiting for replication to finish"
+ssh $backup "$scriptsdir/tools/wait_replication.sh $projectdir $builddir $slavecnf $mastercommits"
+
+if [[ $asyncprocessing == "true" ]]; then
+    echo "Stopping replication"
+    ssh $backup "$scriptsdir/tools/stop_replication.sh $projectdir $builddir"
+fi
+
+echo "Starting clients"
+i=0
+for c in ${clients[@]}; do
+    ssh $c "$scriptsdir/tools/start_client.sh $projectdir $outdir $benchmark $i"
+    let i=$i+1
+done
+
+echo "Starting monitors"
+pid1=$(ssh $primary "$scriptsdir/tools/start_monitor.sh $projectdir $builddir $outdir $mastercnf primary")
+
+if [[ $asyncprocessing != "true" ]]; then
+    pid2=$(ssh $backup "$scriptsdir/tools/start_monitor.sh $projectdir $builddir $outdir $slavecnf backup")
+fi
+
+echo "Letting clients start up"
+sleep 2
+
+echo "Waiting for clients to finish"
+for c in ${clients[@]}; do
+    ssh $c "$scriptsdir/tools/wait_client.sh"
+done
+
+echo "Stopping primary monitor"
+ssh $primary "$scriptsdir/tools/stop_monitor.sh $pid1"
+
+if [[ $asyncprocessing == "true" ]]; then
+    echo "Reading primary log position"
+    out=$(ssh $primary "$scriptsdir/tools/read_status.sh $builddir $mastercnf master")
+
+    logfile=$(echo "$out" | tr "\n" "\t" | cut -f6)
+    logpos=$(echo "$out" | tr "\n" "\t" | cut -f7)
+
+    echo "Reading primary ncommits"
+    mastercommits=$(ssh $primary "$scriptsdir/tools/read_ncommits.sh $builddir $mastercnf")
+
+    echo "Waiting for binlog transfer"
+    ssh $backup "$scriptsdir/tools/wait_transfer.sh $projectdir $builddir $slavecnf $logfile $logpos"
+
+    echo "Starting backup monitor"
+    pid2=$(ssh $backup "$scriptsdir/tools/start_monitor.sh $projectdir $builddir $outdir $slavecnf backup")
+
+    echo "Starting replication"
+    ssh $backup "$scriptsdir/tools/start_replication.sh $projectdir $builddir"
+
+    echo "Waiting for replication to finish"
+    ssh $backup "$scriptsdir/tools/wait_replication.sh $projectdir $builddir $slavecnf $mastercommits"
+fi
+
+echo "Stopping backup monitor"
+ssh $backup "$scriptsdir/tools/stop_monitor.sh $pid2"
+
+echo "Gathering outputs"
+ssh $primary "$scriptsdir/tools/gather_outputs.sh $builddir $outdir"
+ssh $backup "$scriptsdir/tools/gather_outputs.sh $builddir $outdir"
+
+echo "Stopping backup"
+ssh $backup "$scriptsdir/tools/stop_backup.sh $builddir"
+
+echo "Stopping primary"
+ssh $primary "$scriptsdir/tools/stop_primary.sh $builddir"
+
+echo "Processing monitor logs"
+configsdir="$scriptsdir/tools"
+bench_config="$configsdir/$benchmark.xml"
+duration=$(sed -n "s!\s*<time>\([0-9]\+\)</time>\s*!\1!p" $bench_config)
+
+$scriptsdir/tools/process_monitor_log.py -s primary -d $duration -i $outdir/monitor.primary.csv -o $outdir
+
+$scriptsdir/tools/process_monitor_log.py -s backup -d $duration -i $outdir/monitor.backup.csv -o $outdir

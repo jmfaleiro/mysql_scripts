@@ -8,6 +8,7 @@
  * Based on TPC-C Standard Specification Revision 5.0 Clause 2.8.2.
  */
 
+use fdr;
 drop procedure if exists delivery;
 
 delimiter |
@@ -29,30 +30,30 @@ BEGIN
 
      SELECT no_o_id
      INTO tmp_o_id
-     FROM new_order
+     FROM NEW_ORDER
      WHERE no_w_id = in_w_id AND no_d_id = tmp_d_id limit 1;
 
      IF tmp_o_id > 0 
      THEN
-       DELETE FROM new_order 
+       DELETE FROM NEW_ORDER
        WHERE no_o_id = tmp_o_id 
          AND no_w_id = in_w_id 
          AND no_d_id = tmp_d_id;
  
        SELECT o_c_id
        INTO out_c_id
-       FROM orders
+       FROM OORDER
        WHERE o_id = tmp_o_id
          AND o_w_id = in_w_id
          AND o_d_id = tmp_d_id;
  
-       UPDATE orders
+       UPDATE OORDER
        SET o_carrier_id = in_o_carrier_id
        WHERE o_id = tmp_o_id
          AND o_w_id = in_w_id
          AND o_d_id = tmp_d_id;
  
-       UPDATE order_line
+       UPDATE ORDER_LINE
        SET ol_delivery_d = current_timestamp
        WHERE ol_o_id = tmp_o_id
          AND ol_w_id = in_w_id
@@ -60,12 +61,12 @@ BEGIN
  
        SELECT SUM(ol_amount * ol_quantity)
        INTO out_ol_amount
-       FROM order_line
+       FROM ORDER_LINE
        WHERE ol_o_id = tmp_o_id
          AND ol_w_id = in_w_id
          AND ol_d_id = tmp_d_id;
  
-       UPDATE customer
+       UPDATE CUSTOMER
        SET c_delivery_cnt = c_delivery_cnt + 1,
            c_balance = c_balance + out_ol_amount
        WHERE c_id = out_c_id
